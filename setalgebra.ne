@@ -81,7 +81,7 @@ minus_op -> ("minus" | "-") {% d => null %}
 argument -> (set | bracketed) {% id %}
 
 set -> [a-zA-Z0-9]:+ {%
-  d => { return {type: "object", object_type: "set", value: d[0][0]}}
+  d => { return {type: "set", value: d[0][0]}}
 %}
 
 space -> [\s] {% d => null %}

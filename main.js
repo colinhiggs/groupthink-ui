@@ -9,12 +9,12 @@ Vue.component('set-container', {
     <pre style="padding: 1em; color: red">{{parseError}}</pre>
     <div class="flex-container">
       <set-operation
-        v-if="expressionData.type == 'operation'"
+        v-if="expressionData.type === 'operation'"
         :expression-data="expressionData"
         :shared-state="sharedState">
       </set-operation>
       <set-object
-        v-if="expressionData.type == 'object'"
+        v-if="expressionData.type ==='set'"
         :object="expressionData"
         :shared-state="sharedState">
       </set-object>
@@ -93,7 +93,7 @@ Vue.component('set-container', {
           }
         }
         exArray.push(")");
-      } else if (data.type == "object") {
+      } else {
         exArray.push(data.value);
       }
       return exArray;
@@ -118,21 +118,56 @@ Vue.component('set-operation', {
         </select>
       </div>
       <set-operation
-        v-if="arg.type == 'operation'"
+        v-if="arg.type === 'operation'"
         :shared-state="sharedState"
-        :expression-data="arg">
+        :expression-data="arg"
+        @arg-deleted="deleteArg">
       </set-operation>
       <set-object
-        v-if="arg.type == 'object'"
+        v-if="arg.type === 'set'"
         :object="arg"
-        :shared-state="sharedState">
+        :shared-state="sharedState"
+        @arg-deleted="deleteArg">
       </set-object>
     </template>
+    <div>
+      <button
+        style="display:block;float:left;color:red"
+        @click="$emit('arg-deleted', expressionData)"
+      >X</button>
+      <button
+        style="display:block;float:right"
+        @click="addSet"
+      >+S</button>
+      <button
+        style="display:block;float:right"
+        @click="addOp"
+      >+O</button>
+    </div>
   </div>
   `,
   methods: {
-    expressionChanged: function(event) {
+    expressionChanged: function(ev) {
       this.sharedState.commit('expressionSource', 'operation');
+    },
+    addSet: function(ev) {
+      this.expressionData.args.push(
+        {type: 'set', value: null}
+      );
+      this.expressionChanged();
+    },
+    addOp: function(ev) {
+      this.expressionData.args.push(
+        {type: 'operation', op: 'union', args: []}
+      );
+      this.expressionChanged();
+    },
+    deleteArg: function(item) {
+      const index = this.expressionData.args.indexOf(item);
+      if(index !== -1) {
+        this.expressionData.args.splice(index,1)
+      }
+      this.expressionChanged();
     }
   }
 })
@@ -141,11 +176,14 @@ Vue.component('set-object', {
   props: ['object', 'sharedState'],
   template: `
   <div>
-    {{object.object_type}}:
     <input
       v-model="object.value"
       @input="expressionChanged">
     </input>
+    <button
+      style="color:red"
+      @click="$emit('arg-deleted', object)"
+    >X</button>
   </div>
   `,
   methods: {
@@ -163,14 +201,14 @@ var app = new Vue({
       type: 'operation',
       op: 'union',
       args: [
-        {type: 'object', object_type: 'person', value: 'A'},
-        {type: 'object', object_type: 'group', value: 'B'},
+        {type: 'set', value: 'A'},
+        {type: 'set', value: 'B'},
         {
           type: 'operation',
           op: 'intersect',
           args: [
-            {type: 'object', object_type: 'group', value: 'C'},
-            {type: 'object', object_type: 'group', value: 'D'}
+            {type: 'set', value: 'C'},
+            {type: 'set', value: 'D'}
           ]
         }
       ]

@@ -117,7 +117,7 @@ var grammar = {
     {"name": "set$ebnf$1", "symbols": [/[a-zA-Z0-9]/]},
     {"name": "set$ebnf$1", "symbols": ["set$ebnf$1", /[a-zA-Z0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "set", "symbols": ["set$ebnf$1"], "postprocess": 
-        d => { return {type: "object", object_type: "set", value: d[0][0]}}
+        d => { return {type: "set", value: d[0][0]}}
         },
     {"name": "space", "symbols": [/[\s]/], "postprocess": d => null}
 ]
