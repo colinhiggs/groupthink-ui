@@ -1,0 +1,36 @@
+<html>
+<head>
+  <title>Groupthink UI</title>
+</head>
+<style>
+.operation {
+  padding: 10px;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 1px;
+  border-color: grey;
+  border-radius 5px;
+  box-shadow: 5px 5px 5px grey;
+  text-align: center;
+  display: inline-block;
+}
+.flex-container {
+  display: flex;
+}
+</style>
+<body>
+  <div id="app">
+    <h1>{{ title }}</h1>
+    <set-container
+      :initial-expression-data="expression"
+      :source="'/some/path'"
+    ></set-container>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/nearley@2.13.0/lib/nearley.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuex"></script>
+  <script src="setalgebra.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
