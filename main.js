@@ -138,11 +138,11 @@ Vue.component('set-operation', {
       <button
         style="display:block;float:right"
         @click="addSet"
-      >+S</button>
+      >+set</button>
       <button
         style="display:block;float:right"
         @click="addOp"
-      >+O</button>
+      >+op</button>
     </div>
   </div>
   `,
